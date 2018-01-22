@@ -141,6 +141,11 @@ class Videorecorder
         }
     }
 
+    public function isOn()
+    {
+        return $this->isOn;
+    }
+
     /**
      * Eject the currently inserted cassette.
      *
