@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace VCR\PhpHttp;
 
 use GuzzleHttp\Psr7\Response;
+use h4cc\Multipart\ParserSelector;
 use Http\Client\Common\Plugin;
 use Http\Client\Promise\HttpFulfilledPromise;
 use Http\Message\ResponseFactory;
@@ -69,13 +70,6 @@ class VcrPlugin implements Plugin
 
         if (!$request->hasHeader('Content-Type')) {
             $vcrRequest->setHeader('Content-Type', '');
-        } else if ($request->getHeader('Content-Type')[0] === 'application/x-www-form-urlencoded') {
-            $postFields = [];
-            parse_str($request->getBody()->getContents(), $postFields);
-
-            $vcrRequest->setPostFields($postFields);
-        } else if ($request->getHeader('Content-Type')[0] === 'multipart/form-data') {
-            // Parse multipart
         }
 
         return $vcrRequest;
