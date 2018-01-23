@@ -2,6 +2,7 @@
 
 namespace VCR;
 
+use VCR\Exception\NoCassetteInsertedException;
 use VCR\Util\Assertion;
 use VCR\Util\HttpClient;
 use VCR\Event\AfterHttpRequestEvent;
@@ -9,6 +10,7 @@ use VCR\Event\AfterPlaybackEvent;
 use VCR\Event\BeforeHttpRequestEvent;
 use VCR\Event\BeforePlaybackEvent;
 use VCR\Event\BeforeRecordEvent;
+use VCR\Exception\NoPreviousRecordingException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
@@ -215,7 +217,7 @@ class Videorecorder
     public function handleRequest(Request $request)
     {
         if ($this->cassette === null) {
-            throw new \BadMethodCallException(
+            throw new NoCassetteInsertedException(
                 'Invalid http request. No cassette inserted. '
                 . 'Please make sure to insert a cassette in your unit test using '
                 . "VCR::insertCassette('name');"
@@ -238,7 +240,7 @@ class Videorecorder
             || VCR::MODE_ONCE === $this->config->getMode()
             && $this->cassette->isNew() === false
         ) {
-            throw new \LogicException(
+            throw new NoPreviousRecordingException(
                 sprintf(
                     "The request does not match a previously recorded request and the 'mode' is set to '%s'. "
                     . "If you want to send the request anyway, make sure your 'mode' is set to 'new_episodes'. "

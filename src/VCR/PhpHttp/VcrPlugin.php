@@ -66,7 +66,10 @@ class VcrPlugin implements Plugin
             )
         );
 
-        $vcrRequest->setBody($request->getBody()->getContents());
+        $body = $request->getBody()->getContents();
+        if ($body !== "") {
+            $vcrRequest->setBody($body);
+        }
 
         if (!$request->hasHeader('Content-Type')) {
             $vcrRequest->setHeader('Content-Type', '');

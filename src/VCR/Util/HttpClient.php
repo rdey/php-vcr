@@ -32,7 +32,13 @@ class HttpClient
         curl_setopt($ch, CURLOPT_FAILONERROR, false);
         curl_setopt($ch, CURLOPT_HEADER, true);
 
-        list($status, $headers, $body) = HttpUtil::parseResponse(curl_exec($ch));
+        $curlResponse = curl_exec($ch);
+
+        if (!$curlResponse) {
+            throw new \RuntimeException(curl_error($ch));
+        }
+
+        list($status, $headers, $body) = HttpUtil::parseResponse($curlResponse);
 
         return new Response(
             HttpUtil::parseStatus($status),
